@@ -4,7 +4,6 @@ set -euo pipefail
 # Скрипт для сборки собственного geosite.dat только с нужными списками:
 #   - geosite:refilter
 #   - geosite:ru-available-only-inside
-#   - geosite:category-ads-all
 #
 # Запуск из корня проекта или из самой папки:
 #   ./refilter_dat_project/build_geosite_dat.sh
@@ -18,8 +17,8 @@ OUTPUT_DIR="${PROJECT_DIR}/output"
 mkdir -p "${INPUT_DIR}" "${OUTPUT_DIR}"
 
 # 1. URL исходного geosite.dat. По умолчанию берём из russia-blocked-geosite,
-#    где уже есть нужные списки (refilter, ru-available-only-inside,
-#    category-ads-all и др.). При желании можно поменять URL в файле ниже.
+#    где уже есть нужные списки (refilter, ru-available-only-inside и др.).
+#    При желании можно поменять URL в файле ниже.
 GEOSITE_SOURCE_URL_FILE="${INPUT_DIR}/geosite_source_url.txt"
 if [[ ! -f "${GEOSITE_SOURCE_URL_FILE}" ]]; then
   cat >"${GEOSITE_SOURCE_URL_FILE}" <<'EOF'
@@ -43,13 +42,13 @@ fi
 # 2. Запускаем Go‑утилиту, которая вырежет только нужные списки
 FILTERED_OUTPUT_PATH="${OUTPUT_DIR}/geosite-refilter-ruinside-ads.dat"
 
-echo "⚙️ Фильтрую geosite.dat (оставляю refilter, ru-available-only-inside, category-ads-all)"
+echo "⚙️ Фильтрую geosite.dat (оставляю refilter, ru-available-only-inside)"
 (
   cd "${PROJECT_DIR}"
   go run ./cmd/filter_geosite \
     -in "${GEOSITE_SOURCE_PATH}" \
     -out "${FILTERED_OUTPUT_PATH}" \
-    -lists "refilter,ru-available-only-inside,category-ads-all"
+    -lists "refilter,ru-available-only-inside"
 )
 
 echo "✅ Готово: ${FILTERED_OUTPUT_PATH} (только нужные списки geosite:*)"
