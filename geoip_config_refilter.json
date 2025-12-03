@@ -1,0 +1,23 @@
+{
+  "input": [
+    {
+      "type": "v2rayGeoIPDat",
+      "action": "add",
+      "args": {
+        "uri": "/Volumes/Documents/work/pythonscripts/bot_template_example/refilter_dat_project/input/geoip_refilter_source.dat",
+        "wantedList": ["refilter"]
+      }
+    }
+  ],
+  "output": [
+    {
+      "type": "v2rayGeoIPDat",
+      "action": "output",
+      "args": {
+        "outputDir": "/Volumes/Documents/work/pythonscripts/bot_template_example/refilter_dat_project/output",
+        "outputName": "geoip-refilter-only.dat",
+        "wantedList": ["refilter"]
+      }
+    }
+  ]
+}

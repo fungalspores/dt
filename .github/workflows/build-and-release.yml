@@ -1,0 +1,47 @@
+name: Build and release refilter dat files
+
+on:
+  schedule:
+    # Каждые 6 часов
+    - cron: "0 */6 * * *"
+  # Ручной запуск из интерфейса GitHub
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+
+      - name: Make scripts executable
+        run: |
+          chmod +x build_refilter_dat.sh
+          chmod +x build_geosite_dat.sh
+          chmod +x build_all_refilter_dat.sh
+
+      - name: Build geoip/geosite dat files
+        run: ./build_all_refilter_dat.sh
+
+      - name: Create / update 'latest' release with .dat assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: latest
+          prerelease: false
+          draft: false
+          files: |
+            output/geoip-refilter-only.dat
+            output/geosite-refilter-ruinside-ads.dat
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
