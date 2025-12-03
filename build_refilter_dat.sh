@@ -29,13 +29,14 @@ clone_repo() {
 GEOIP_REPO_DIR="${THIRD_PARTY_DIR}/geoip"
 clone_repo "https://github.com/v2fly/geoip.git" "${GEOIP_REPO_DIR}"
 
-# 2. Скачиваем исходный geoip.dat с тегом geoip:refilter
-#    (по умолчанию — из Re-filter-lists releases; при желании можно
-#    поменять URL на свой в файле input/geoip_source_url.txt)
+# 2. Скачиваем исходный geoip.dat
+#    По умолчанию — из russia-blocked-geoip (в нём есть списки geoip:ru и
+#    geoip:re-filter). При желании можно поменять URL на свой в файле
+#    input/geoip_source_url.txt.
 GEOIP_SOURCE_URL_FILE="${INPUT_DIR}/geoip_source_url.txt"
 if [[ ! -f "${GEOIP_SOURCE_URL_FILE}" ]]; then
   cat >"${GEOIP_SOURCE_URL_FILE}" <<'EOF'
-https://github.com/1andrevich/Re-filter-lists/releases/latest/download/geoip.dat
+https://github.com/runetfreedom/russia-blocked-geoip/releases/download/202512030930/geoip.dat
 EOF
 fi
 
@@ -52,7 +53,7 @@ else
   exit 1
 fi
 
-# 3. Готовим конфиг для geoip CLI, который оставит только geoip:refilter
+# 3. Готовим конфиг для geoip CLI, который оставит только geoip:ru и geoip:re-filter
 GEOIP_CONFIG="${PROJECT_DIR}/geoip_config_refilter.json"
 cat >"${GEOIP_CONFIG}" <<EOF
 {
@@ -62,7 +63,7 @@ cat >"${GEOIP_CONFIG}" <<EOF
       "action": "add",
       "args": {
         "uri": "${GEOIP_SOURCE_PATH}",
-        "wantedList": ["refilter"]
+        "wantedList": ["ru", "re-filter"]
       }
     }
   ],
@@ -73,21 +74,21 @@ cat >"${GEOIP_CONFIG}" <<EOF
       "args": {
         "outputDir": "${OUTPUT_DIR}",
         "outputName": "geoip-refilter-only.dat",
-        "wantedList": ["refilter"]
+        "wantedList": ["ru", "re-filter"]
       }
     }
   ]
 }
 EOF
 
-# 4. Собираем geoip.dat с geoip:refilter
-echo "⚙️ Собираю geoip-refilter-only.dat с помощью v2fly/geoip"
+# 4. Собираем geoip.dat с geoip:ru и geoip:re-filter
+echo "⚙️ Собираю geoip-refilter-only.dat (ru + re-filter) с помощью v2fly/geoip"
 (
   cd "${GEOIP_REPO_DIR}"
   go run ./ -c "${GEOIP_CONFIG}"
 )
 
-echo "✅ Готово: ${OUTPUT_DIR}/geoip-refilter-only.dat (только geoip:refilter)"
+echo "✅ Готово: ${OUTPUT_DIR}/geoip-refilter-only.dat (только geoip:ru и geoip:re-filter)"
 
 echo
 echo "ℹ️ Часть с geosite (geosite:refilter, ru-available-only-inside, category-ads-all)"
