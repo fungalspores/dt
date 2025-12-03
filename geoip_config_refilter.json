@@ -5,7 +5,7 @@
       "action": "add",
       "args": {
         "uri": "/Volumes/Documents/work/pythonscripts/bot_template_example/refilter_dat_project/input/geoip_refilter_source.dat",
-        "wantedList": ["refilter"]
+        "wantedList": ["ru", "re-filter"]
       }
     }
   ],
@@ -16,7 +16,7 @@
       "args": {
         "outputDir": "/Volumes/Documents/work/pythonscripts/bot_template_example/refilter_dat_project/output",
         "outputName": "geoip-refilter-only.dat",
-        "wantedList": ["refilter"]
+        "wantedList": ["ru", "re-filter"]
       }
     }
   ]

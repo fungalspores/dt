@@ -1,1 +1,1 @@
-https://github.com/1andrevich/Re-filter-lists/releases/latest/download/geoip.dat
+https://github.com/runetfreedom/russia-blocked-geoip/releases/download/202512030930/geoip.dat
